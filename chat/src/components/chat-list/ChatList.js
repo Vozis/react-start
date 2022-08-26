@@ -1,30 +1,45 @@
 import * as React from "react";
 import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
-import ChatIcon from "@mui/icons-material/Chat";
+import { useCallback, useState } from "react";
+import { Chat } from "./chat";
 
-export function ChatList() {
+export const ChatList = ({ chatList }) => {
   return (
-    <List>
-      <ListItem disablePadding>
-        <ListItemButton>
-          <ListItemIcon>
-            <ChatIcon />
-          </ListItemIcon>
-          <ListItemText primary="Chat1" />
-        </ListItemButton>
-      </ListItem>
-      <ListItem disablePadding>
-        <ListItemButton>
-          <ListItemIcon>
-            <ChatIcon />
-          </ListItemIcon>
-          <ListItemText primary="Chat2" />
-        </ListItemButton>
-      </ListItem>
-    </List>
+    <>
+      <List components={"nav"}>
+        {Object.keys(chatList).map((chat) => (
+          <Chat
+            key={chat}
+            chat={chat}
+            // selected={chat === selectedRoom}
+            // handleListItemClick={handleListItemClick}
+          />
+        ))}
+      </List>
+    </>
   );
-}
+};
+
+/*
+const [chatList] = useState({
+  chat1: {
+    name: "Chat 1",
+    id: 1,
+    content: [
+      {
+        message: "Message",
+        author: "Author",
+      },
+    ],
+  },
+  chat2: {
+    name: "Chat 2",
+    id: 2,
+    content: [
+      {
+        message: "Message",
+        author: "Author",
+      },
+    ],
+  },
+});*/

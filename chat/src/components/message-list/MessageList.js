@@ -2,11 +2,16 @@ import React, { useEffect, useState, useRef } from "react";
 import { Message } from "./message";
 import { Input, SendIcon } from "../styles";
 import { InputAdornment } from "@mui/material";
+import { useParams } from "react-router-dom";
 
-export const MessageList = () => {
-  const [messageList, setMessageList] = useState([]);
+export const MessageList = ({ chatList }) => {
+  const params = useParams();
+  console.log(params);
+
+  const [messageList, setMessageList] = useState(
+    chatList[params.chatsId].messages
+  );
   const [value, setValue] = useState("");
-
   const inputRef = useRef(null);
   const ref = useRef();
 
@@ -28,7 +33,9 @@ export const MessageList = () => {
   };
 
   useEffect(() => {
-    inputRef.current.children[0].focus();
+    {
+      inputRef && inputRef.current.children[0].focus();
+    }
   }, []);
 
   useEffect(() => {
