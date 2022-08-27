@@ -4,23 +4,51 @@ import { Input, SendIcon } from "../styles";
 import { InputAdornment } from "@mui/material";
 import { useParams } from "react-router-dom";
 
-export const MessageList = ({ chatList }) => {
-  const params = useParams();
-  console.log(params);
-
-  const [messageList, setMessageList] = useState(
-    chatList[params.chatsId].messages
-  );
+export const MessageList = () => {
+  const [messageList, setMessageList] = useState({
+    chat1: [
+      {
+        author: "User",
+        message: "Первое сообщение в первом чате",
+        date: new Date(),
+      },
+      {
+        author: "Bot",
+        message: "Ответ на первое сообщение в первом чате",
+        date: new Date(),
+      },
+    ],
+    chat2: [
+      {
+        author: "User",
+        message: "Первое сообщение во втором чате",
+        date: new Date(),
+      },
+    ],
+    chat3: [
+      {
+        author: "User",
+        message: "Первое сообщение в третьем чате",
+        date: new Date(),
+      },
+    ],
+  });
   const [value, setValue] = useState("");
   const inputRef = useRef(null);
   const ref = useRef();
+  const { chatId } = useParams();
 
-  const sendMessage = () => {
-    if (value) {
-      setMessageList([
-        ...messageList,
-        { author: "User", message: value, date: new Date() },
-      ]);
+  console.log(messageList);
+
+  const sendMessage = (message, author = "User") => {
+    if (message) {
+      setMessageList((state) => ({
+        ...state,
+        [chatId]: [
+          ...(state[chatId] ?? []),
+          { author, message, date: new Date() },
+        ],
+      }));
       inputRef.current.children[0].focus();
       setValue("");
     }
@@ -28,7 +56,7 @@ export const MessageList = ({ chatList }) => {
 
   const handlePressInput = ({ code }) => {
     if (code === "Enter") {
-      sendMessage();
+      sendMessage(value);
     }
   };
 
@@ -49,31 +77,28 @@ export const MessageList = ({ chatList }) => {
   });
 
   useEffect(() => {
-    const lastMessage = messageList[messageList.length - 1];
+    const messages = messageList[chatId] ?? [];
+    const lastMessage = messages[messages.length - 1];
     let timerId = null;
 
-    if (messageList.length && lastMessage.author === "User") {
+    if (messages.length && lastMessage.author === "User") {
       timerId = setTimeout(() => {
-        setMessageList([
-          ...messageList,
-          {
-            author: "Bot",
-            message: "Hello from Bot",
-            date: new Date(),
-          },
-        ]);
-      }, 1500);
+        sendMessage("Hello from Bot", "Bot");
+      }, 500);
+      console.log(messageList);
 
       return () => {
         clearInterval(timerId);
       };
     }
-  }, [messageList]);
+  }, [chatId, messageList, sendMessage]);
+
+  const messages = messageList[chatId] ?? [];
 
   return (
     <>
       <div ref={ref}>
-        {messageList.map((message, index) => (
+        {messages.map((message, index) => (
           <Message message={message} key={index} />
         ))}
       </div>

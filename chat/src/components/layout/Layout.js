@@ -5,7 +5,7 @@ import { theme } from "../../index";
 const LayoutClass = styled.div`
   background: gray;
   width: 100%;
-  height: 100%;
+  height: calc(100% - 37px);
   display: flex;
   flex-direction: column;
   color: #ffffff;
@@ -45,15 +45,12 @@ const ChatsClass = styled.div`
   border-right: 1px solid #000;
 `;
 
-export function Layout({ children }) {
+export function Layout({ chats, messages }) {
   return (
     <LayoutClass>
       <Content>
-        <ChatsClass>{children[0]}</ChatsClass>
-        <MessagesClass>{children[1]}</MessagesClass>
-
-        {/*<ChatsClass>{chats}</ChatsClass>
-        <MessagesClass>{messages}</MessagesClass>*/}
+        <ChatsClass>{chats}</ChatsClass>
+        <MessagesClass>{messages}</MessagesClass>
       </Content>
     </LayoutClass>
   );

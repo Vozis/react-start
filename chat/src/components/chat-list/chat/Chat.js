@@ -7,11 +7,11 @@ import {
 } from "@mui/material";
 import ChatIcon from "@mui/icons-material/Chat";
 import { memo } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useParams } from "react-router-dom";
 
-export const Chat = memo(({ chat }) => {
+export const Chat = memo(({ title }) => {
   return (
-    <NavLink to={`/chats/${chat}`}>
+    <NavLink to={`/chats/${title}`}>
       <ListItem disablePadding>
         <ListItemButton
           component={"button"}
@@ -26,7 +26,7 @@ export const Chat = memo(({ chat }) => {
           <ListItemIcon>
             <ChatIcon className={"text-white"} />
           </ListItemIcon>
-          <ListItemText primary={chat} />
+          <ListItemText primary={title} />
         </ListItemButton>
       </ListItem>
     </NavLink>

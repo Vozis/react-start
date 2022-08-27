@@ -3,14 +3,15 @@ import List from "@mui/material/List";
 import { useCallback, useState } from "react";
 import { Chat } from "./chat";
 
-export const ChatList = ({ chatList }) => {
+export const ChatList = () => {
+  const [chatlist] = useState(["chat1", "chat2", "chat3"]);
   return (
     <>
       <List components={"nav"}>
-        {Object.keys(chatList).map((chat) => (
+        {chatlist.map((chat) => (
           <Chat
             key={chat}
-            chat={chat}
+            title={chat}
             // selected={chat === selectedRoom}
             // handleListItemClick={handleListItemClick}
           />
@@ -19,27 +20,3 @@ export const ChatList = ({ chatList }) => {
     </>
   );
 };
-
-/*
-const [chatList] = useState({
-  chat1: {
-    name: "Chat 1",
-    id: 1,
-    content: [
-      {
-        message: "Message",
-        author: "Author",
-      },
-    ],
-  },
-  chat2: {
-    name: "Chat 2",
-    id: 2,
-    content: [
-      {
-        message: "Message",
-        author: "Author",
-      },
-    ],
-  },
-});*/

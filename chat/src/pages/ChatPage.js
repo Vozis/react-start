@@ -3,46 +3,18 @@ import React, { useState } from "react";
 import { Routes, Route, Outlet } from "react-router-dom";
 
 export const ChatPage = () => {
-  const [chatList] = useState([
-    {
-      name: "chat1",
-      title: "Chat 1",
-      id: 1,
-      messages: [
-        {
-          author: "John",
-          message: "Первое сообщение",
-          date: new Date(),
-        },
-        {
-          author: "John",
-          message: "Первое сообщение",
-          date: new Date(),
-        },
-      ],
-    },
-    {
-      name: "chat2",
-      title: "Chat 2",
-      id: 2,
-      messages: [
-        {
-          author: "John",
-          message: "Первое сообщение",
-          date: new Date(),
-        },
-        {
-          author: "John",
-          message: "Первое сообщение",
-          date: new Date(),
-        },
-      ],
-    },
-  ]);
   return (
-    <Layout>
-      <ChatList />
-      <Outlet />
-    </Layout>
+    <Routes>
+      <Route
+        path="/"
+        element={
+          <Layout messages={<div>выберите чат</div>} chats={<ChatList />} />
+        }
+      />
+      <Route
+        path=":chatId"
+        element={<Layout messages={<MessageList />} chats={<ChatList />} />}
+      />
+    </Routes>
   );
 };
