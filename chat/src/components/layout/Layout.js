@@ -1,6 +1,6 @@
 import styles from "./layout.module.css";
 import styled from "@emotion/styled";
-import { theme } from "../../index";
+import { themeMUI } from "../../theme-context";
 
 const LayoutClass = styled.div`
   background: gray;
@@ -22,7 +22,7 @@ const MessagesClass = styled.div`
   display: flex;
   flex-direction: column;
   width: 80%;
-  background-color: ${(props) => theme.palette.secondary.main};
+  background-color: ${(props) => themeMUI.palette.secondary.main};
 
   & div:nth-of-type(1) {
     flex-grow: 1;
@@ -41,7 +41,7 @@ const MessagesClass = styled.div`
 const ChatsClass = styled.div`
   overflow-y: auto;
   width: 20%;
-  background-color: ${(props) => theme.palette.primary.main};
+  background-color: ${(props) => themeMUI.palette.primary.main};
   border-right: 1px solid #000;
 `;
 

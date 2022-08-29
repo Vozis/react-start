@@ -1,8 +1,24 @@
 import { ChatList, Header, Layout, MessageList } from "../components";
-import React, { useState } from "react";
-import { Routes, Route, Outlet } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Routes, Route, Outlet, useNavigate } from "react-router-dom";
 
 export const ChatPage = () => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const listener = ({ code }) => {
+      if (code === "Escape") {
+        navigate("/chats");
+      }
+    };
+
+    document.addEventListener("keydown", listener);
+
+    return () => {
+      document.removeEventListener("keydown", listener);
+    };
+  }, []);
+
   return (
     <Routes>
       <Route
