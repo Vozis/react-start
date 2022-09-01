@@ -1,4 +1,5 @@
 import { DECREMENT, INCREMENT } from "./types";
+import { createAction } from "@reduxjs/toolkit";
 
 export const increment = () => {
   return {
@@ -11,3 +12,5 @@ export const decrement = () => {
     type: DECREMENT,
   };
 };
+
+export const countIncrement = createAction(INCREMENT);

@@ -1,53 +1,47 @@
-import { createContext, useCallback, useContext, useState } from "react";
-
+import { createContext, useCallback, useState } from "react";
 import { ThemeProvider, createTheme } from "@mui/material";
 
-const defaultValue = "default value";
+const defaultValue = "light";
+
 export const ThemeContext = createContext(defaultValue);
 
 const themes = {
   dark: {
-    color: "#000",
+    color: "#fff",
   },
   light: {
-    color: "#fff",
+    color: "#000",
   },
 };
 
-export const themeMUI = createTheme({
-  palette: {
-    mode: "dark",
-    // primary: {
-    //   main: "#17212b",
-    // },
-    // secondary: {
-    //   main: "#0e1621",
-    // },
-  },
-});
-
-// export const themeMUI = {
-//   dark: createTheme({
-//     palette: {
-//       primary: {
-//         main: "#17212b",
-//       },
-//       secondary: {
-//         main: "#0e1621",
-//       },
-//     },
-//   }),
-//   light: createTheme({
-//     palette: {
-//       primary: {
-//         main: "#17212b",
-//       },
-//       secondary: {
-//         main: "#0e1621",
-//       },
-//     },
-//   }),
-// };
+export const themesMUI = {
+  dark: createTheme({
+    palette: {
+      primary: {
+        main: "#141414",
+      },
+      secondary: {
+        main: "#5181B9",
+      },
+      text: {
+        main: "#ffffff",
+      },
+    },
+  }),
+  light: createTheme({
+    palette: {
+      primary: {
+        main: "#56a2ec",
+      },
+      secondary: {
+        main: "#002cc4",
+      },
+      text: {
+        main: "#000",
+      },
+    },
+  }),
+};
 
 export const CustomThemeProvider = ({ children, initialTheme = "light" }) => {
   const [theme, setTheme] = useState({
@@ -55,18 +49,21 @@ export const CustomThemeProvider = ({ children, initialTheme = "light" }) => {
     name: initialTheme,
   });
 
+  const [themeMui, setThemeMui] = useState(themesMUI[theme.name]);
+
   const themeSetter = useCallback((name) => {
     if (themes[name]) {
       setTheme({
         name,
         theme: themes[name],
       });
+      setThemeMui(themesMUI[name]);
     }
   }, []);
 
   return (
-    <ThemeContext.Provider value={{ theme, themeSetter }}>
-      <ThemeProvider theme={themeMUI}>{children}</ThemeProvider>
+    <ThemeContext.Provider value={{ theme, themeSetter, themeMui }}>
+      <ThemeProvider theme={themeMui}>{children}</ThemeProvider>
     </ThemeContext.Provider>
   );
 };

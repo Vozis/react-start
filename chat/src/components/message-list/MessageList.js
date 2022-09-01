@@ -36,6 +36,7 @@ export const MessageList = () => {
   const [value, setValue] = useState("");
   const inputRef = useRef(null);
   const ref = useRef();
+
   const { chatId } = useParams();
 
   const messages = messageList[chatId] ?? [];
@@ -58,7 +59,6 @@ export const MessageList = () => {
             { author, message, date: new Date() },
           ],
         }));
-        console.log("render");
         inputRef.current.children[0].focus();
         setValue("");
       }
@@ -70,6 +70,10 @@ export const MessageList = () => {
     if (code === "Enter") {
       sendMessage(value);
     }
+  };
+
+  const handleChange = (e) => {
+    setValue(e.target.value);
   };
 
   useEffect(() => {
@@ -117,8 +121,8 @@ export const MessageList = () => {
         ref={inputRef}
         placeholder="Введите сообщение..."
         value={value}
-        onChange={(e) => setValue(e.target.value)}
-        onKeyPress={handlePressInput}
+        onChange={handleChange}
+        onKeyDown={handlePressInput}
         endAdornment={
           <InputAdornment position="end">
             {value && <SendIcon onClick={sendMessage} />}

@@ -1,17 +1,18 @@
 import styled from "@emotion/styled";
-import { themeMUI } from "../../theme-context";
 import { NavLink } from "react-router-dom";
 import { useContext, useState } from "react";
 import { ThemeContext } from "../../theme-context";
-import { Button, FormGroup, FormControlLabel, Switch } from "@mui/material";
+import { FormControlLabel, Switch } from "@mui/material";
+import { CustomNavLink } from "../styles";
 
 const HeaderClass = styled.div`
   display: flex;
   gap: 20px;
   padding: 10px 0;
   justify-content: center;
-  background-color: ${(props) => themeMUI.palette.primary.main};
+  align-items: center;
   border-bottom: 1px solid #000;
+  background-color: ${({ theme }) => theme.palette.primary.light};
 `;
 
 const menu = [
@@ -30,38 +31,39 @@ const menu = [
 ];
 
 export const Header = () => {
-  const { theme, themeSetter } = useContext(ThemeContext);
-  // const [themeMode, setThemeMode] = useState(false)
+  const { theme, themeSetter, themeMui } = useContext(ThemeContext);
+  const [checked, setChecked] = useState(theme.name === "light" ? true : false);
 
   const handleChange = (e) => {
-    themeSetter(e.target.checked);
+    setChecked(e.target.checked);
+    themeSetter(e.target.checked === true ? "light" : "dark");
   };
+  console.log("theme", theme);
+  console.log("themeMui", themeMui);
 
   return (
     <HeaderClass>
       <FormControlLabel
+        sx={{
+          color: theme.theme.color,
+        }}
         control={
-          <Switch
-            color="warning"
-            onChange={handleChange}
-            checked={theme === "light"}
-          />
+          <Switch color="success" onChange={handleChange} checked={checked} />
         }
         label={theme.name}
       />
-
       {menu.map((item) => (
-        <NavLink
+        <CustomNavLink
           key={item.to}
           to={item.to}
           style={({ isActive }) => {
             return {
-              color: isActive ? "red" : "",
+              color: isActive ? "red" : " ",
             };
           }}
         >
           {item.title}
-        </NavLink>
+        </CustomNavLink>
       ))}
     </HeaderClass>
   );

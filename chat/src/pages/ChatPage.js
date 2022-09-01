@@ -11,7 +11,6 @@ export const ChatPage = () => {
         navigate("/chats");
       }
     };
-
     document.addEventListener("keydown", listener);
 
     return () => {
