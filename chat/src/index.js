@@ -17,6 +17,7 @@ const App = () => {
 
   return (
     <Provider store={store2}>
+      {/*<Provider store={store}>*/}
       <CustomThemeProvider initialTheme={theme}>
         {/*<Router />*/}
         <BrowserRouter>

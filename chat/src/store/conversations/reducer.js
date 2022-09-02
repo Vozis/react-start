@@ -1,7 +1,7 @@
-import {CREATE_CONVERSATION, DELETE_CONVERSATION} from './types';
+import { CREATE_CONVERSATION, DELETE_CONVERSATION } from "./types";
 
 const initialState = {
-  conversations: ['room1', 'room2', 'room3'],
+  conversations: ["chat1", "chat2", "chat3"],
 };
 
 export const conversationsReducer = (state = initialState, action) => {
@@ -9,13 +9,18 @@ export const conversationsReducer = (state = initialState, action) => {
     case CREATE_CONVERSATION:
       return {
         ...state,
-        conversation: [...state.conversations, action.payload],
+        conversations: [...(state.conversations || []), action.payload],
       };
+    // return {
+    //   ...state,
+    //   conversations: state.conversations.concat(action.payload),
+    // };
     case DELETE_CONVERSATION:
       return {
-        ...state, state.conversations.filter(conversation => {
-        
-        })
+        ...state,
+        conversations: state.conversations.filter(
+          (conversation) => conversation !== action.payload
+        ),
       };
     default:
       return state;

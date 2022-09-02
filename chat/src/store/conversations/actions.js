@@ -1,9 +1,10 @@
-import { DELETE_CONVERSATION, CREATE_CONVERSATION } from "./types";
+import { CREATE_CONVERSATION, DELETE_CONVERSATION } from "./types";
 
-export const createConversation = () => {
-  type: CREATE_CONVERSATION, payload;
-};
-
-export const deleteConversation = () => {
-  type: DELETE_CONVERSATION, payload;
-};
+export const createConversation = (conversation) => ({
+  type: CREATE_CONVERSATION,
+  payload: conversation,
+});
+export const deleteConversation = (conversation) => ({
+  type: DELETE_CONVERSATION,
+  payload: conversation,
+});

@@ -1,5 +1,6 @@
 import React, { useContext } from "react";
 import {
+  Button,
   ListItem,
   ListItemButton,
   ListItemIcon,
@@ -11,7 +12,7 @@ import { NavLink, useParams } from "react-router-dom";
 import { CustomNavLink } from "../../styles";
 import { ThemeContext } from "../../../theme-context";
 
-export const Chat = memo(({ title, selected }) => {
+export const Chat = memo(({ title, selected, deleteConversationByName }) => {
   const { theme, themeMui } = useContext(ThemeContext);
 
   return (
@@ -38,6 +39,17 @@ export const Chat = memo(({ title, selected }) => {
           </ListItemIcon>
           <ListItemText primary={title} />
         </ListItemButton>
+        <Button
+          variant={"contained"}
+          size={"small"}
+          sx={{
+            color: theme.theme.color,
+            backgroundColor: themeMui.palette.secondary.light,
+          }}
+          onClick={(event) => deleteConversationByName(title, event)}
+        >
+          X
+        </Button>
       </ListItem>
     </CustomNavLink>
   );
