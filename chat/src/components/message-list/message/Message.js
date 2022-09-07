@@ -7,7 +7,6 @@ import { removeMessage } from "../../../store/messages/messagesSliceReducer";
 
 export function Message({ message, chatId }) {
   const dispatch = useDispatch();
-  // console.log("Message id:", message.id);
 
   return (
     <div
@@ -21,16 +20,16 @@ export function Message({ message, chatId }) {
         {message.date.toDateString()}, {message.date.getHours()}:
         {message.date.getMinutes()}
       </p>
-      {/*  <button onClick={() => dispatch(deleteMessage(chatId, message.id))}>
+      <button onClick={() => dispatch(deleteMessage(chatId, message.id))}>
         X
-      </button>*/}
-      <button
+      </button>
+      {/*<button
         onClick={() =>
           dispatch(removeMessage({ chatId, messageId: message.id }))
         }
       >
         X
-      </button>
+      </button>*/}
     </div>
   );
 }

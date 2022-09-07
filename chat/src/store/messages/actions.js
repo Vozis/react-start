@@ -5,6 +5,9 @@ export const sendMessage = (chatId, message) => {
   return {
     type: SEND_MESSAGE,
     payload: { chatId, message },
+    meta: {
+      delay: 500,
+    },
   };
 };
 

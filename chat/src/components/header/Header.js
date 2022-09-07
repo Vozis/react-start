@@ -38,8 +38,8 @@ export const Header = () => {
     setChecked(e.target.checked);
     themeSetter(e.target.checked === true ? "light" : "dark");
   };
-  console.log("theme", theme);
-  console.log("themeMui", themeMui);
+  // console.log("theme", theme);
+  // console.log("themeMui", themeMui);
 
   return (
     <HeaderClass>

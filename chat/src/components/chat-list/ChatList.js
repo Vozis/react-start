@@ -5,6 +5,7 @@ import { Chat } from "./chat";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  conversationsSelector,
   createConversation,
   deleteConversation,
 } from "../../store/conversations";
@@ -14,22 +15,21 @@ import {
 } from "../../store/conversations/conversationsSliceReducer";
 import { Button, Input, TextField } from "@mui/material";
 import { ThemeContext } from "../../theme-context";
-import { defaults } from "autoprefixer";
 
 export const ChatList = () => {
-  const { conversations } = useSelector((state) => state.conversations);
+  const { conversations } = useSelector(conversationsSelector);
   const { chatId } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [chatName, setChatName] = useState("");
   const { theme, themeMui } = useContext(ThemeContext);
 
-  console.log("conversations: ", conversations);
+  // console.log("conversations: ", conversations);
 
   const deleteConversationByName = useCallback(
     (name, event) => {
-      // dispatch(deleteConversation(name));
-      dispatch(removeConversation(name));
+      dispatch(deleteConversation(name));
+      // dispatch(removeConversation(name));
       event.preventDefault();
       // setTimeout(() => navigate("/chats"), 0);
       navigate("/chats");
@@ -55,20 +55,10 @@ export const ChatList = () => {
     // }
 
     if (chatName && isValidName) {
-      // dispatch(createConversation(chatName));
-      dispatch(addConversation(chatName));
+      dispatch(createConversation(chatName));
+      // dispatch(addConversation(chatName));
     } else {
       alert("Ошибка в названии");
-    }
-  };
-
-  const createConversationByNamePrompt = () => {
-    const name = prompt("Введите имя: ");
-
-    if (name) {
-      dispatch(createConversation(name));
-    } else {
-      alert("Напишите название");
     }
   };
 
@@ -84,7 +74,6 @@ export const ChatList = () => {
         />
         <Button
           onClick={createConversationByName}
-          // onClick={createConversationByNamePrompt}
           variant={"contained"}
           size={"small"}
           sx={{

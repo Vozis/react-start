@@ -1,5 +1,5 @@
 import { combineReducers, createStore } from "redux";
-import { configureStore } from "@reduxjs/toolkit";
+import { applyMiddleware, compose, configureStore } from "@reduxjs/toolkit";
 import profileStudyReducer, { profileReducer } from "./profile/reducer";
 import counterSliceReducer from "./counter/counterSliceReducer";
 import profileSliceReducer from "./profile/profileSliceReducer";
@@ -8,10 +8,33 @@ import { conversationsReducer } from "./conversations";
 import conversationsSliceReducer from "./conversations/conversationsSliceReducer";
 import { messagesReducer } from "./messages";
 import messagesSliceReducer from "./messages/messagesSliceReducer";
+import { botMessage, timeScheduler } from "./middlewares";
+import thunk from "redux-thunk";
 
-// ========================== Create Store=========================
+import { persistStore, persistReducer, createTransform } from "redux-persist";
+import storage from "redux-persist/lib/storage";
+import logger from "redux-logger";
 
-export const store = createStore(
+// ========================== Persist reducer=========================
+
+const persistConfig = {
+  key: "root",
+  storage,
+  whitelist: ["messages"],
+  transforms: [
+    createTransform(JSON.stringify, (toRehydrate) =>
+      JSON.parse(toRehydrate, (key, value) =>
+        typeof value === "string" &&
+        value.match(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/)
+          ? new Date(value)
+          : value
+      )
+    ),
+  ],
+};
+
+const persistedReducer = persistReducer(
+  persistConfig,
   combineReducers({
     counter: counterReducer,
     profile: profileReducer,
@@ -19,6 +42,20 @@ export const store = createStore(
     messages: messagesReducer,
   })
 );
+
+// ========================== Create Store=========================
+
+export const store = createStore(
+  persistedReducer,
+  compose(
+    applyMiddleware(timeScheduler, thunk, logger),
+    window.__REDUX_DEVTOOLS_EXTENSION__
+      ? window.__REDUX_DEVTOOLS_EXTENSION__()
+      : (args) => args
+  )
+);
+
+export const persistor = persistStore(store);
 
 // ========================== Configure Store 1 =========================
 
@@ -30,12 +67,14 @@ const rootReducer = combineReducers({
   messages: messagesSliceReducer,
 });
 
+const middlewares = [timeScheduler, botMessage, logger];
+
 export const store2 = configureStore({
   reducer: rootReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: false,
-    }),
+    }).concat(middlewares),
 });
 
 // ========================== Configure Store 2 =========================

@@ -5,7 +5,6 @@ import { NavLink } from "react-router-dom";
 
 export const Input = styled(DefaultInput)`
   color: ${(ctx) => {
-    console.log("ctx MUI:", ctx);
     return "#9a9fa1";
   }};
   padding: 10px 15px;
