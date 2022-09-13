@@ -4,7 +4,10 @@ const initialState = {
   gists: [],
   pending: false,
   error: null,
+  searchedLocalGists: [],
   searchedGists: [],
+  searchPending: false,
+  searchError: false,
 };
 
 export const fetchAsyncGists = createAsyncThunk(
@@ -12,6 +15,18 @@ export const fetchAsyncGists = createAsyncThunk(
   async (page, thunkAPI) => {
     try {
       const { data } = await thunkAPI.extra.getPublicApi(page);
+      return data;
+    } catch (err) {
+      return thunkAPI.rejectWithValue(err.message);
+    }
+  }
+);
+
+export const searchAsyncGists = createAsyncThunk(
+  "gists/searchGists",
+  async (name = "bogdanq", thunkAPI) => {
+    try {
+      const { data } = await thunkAPI.extra.searchGistsByName(name);
       return data;
     } catch (err) {
       return thunkAPI.rejectWithValue(err.message);
@@ -35,11 +50,23 @@ const gistsSliceReducer = createSlice({
       state.pending = false;
       state.error = action.payload;
     },
-    searchGists: (state, action) => {
+    searchLocalGists: (state, action) => {
       const result = state.gists.filter((gist) =>
         gist.url.toLowerCase().includes(action.payload.toLowerCase())
       );
-      state.searchedGists = result;
+      state.searchedLocalGists = result;
+    },
+    searchGists: (state, action) => {
+      state.searchPending = true;
+    },
+    searchGistsSuccess: (state, action) => {
+      state.searchPending = false;
+      state.searchError = null;
+      state.searchedGists = action.payload;
+    },
+    searchGistsError: (state, action) => {
+      state.searchPending = false;
+      state.searchError = action.payload;
     },
   },
   extraReducers: {
@@ -55,12 +82,31 @@ const gistsSliceReducer = createSlice({
       state.pending = false;
       state.error = action.payload;
     },
+    [searchAsyncGists.pending.type]: (state) => {
+      state.searchPending = true;
+    },
+    [searchAsyncGists.fulfilled.type]: (state, action) => {
+      state.searchPending = false;
+      state.error = null;
+      state.searchedGists = action.payload;
+    },
+    [searchAsyncGists.rejected.type]: (state, action) => {
+      state.searchPending = false;
+      state.error = action.payload;
+    },
   },
 });
 
 export default gistsSliceReducer.reducer;
-export const { fetchGists, fetchGistsSuccess, fetchGistsError, searchGists } =
-  gistsSliceReducer.actions;
+export const {
+  fetchGists,
+  fetchGistsSuccess,
+  fetchGistsError,
+  searchLocalGists,
+  searchGists,
+  searchGistsError,
+  searchGistsSuccess,
+} = gistsSliceReducer.actions;
 
 export const fetchSliceGists = (page) => async (dispatch, _, api) => {
   try {

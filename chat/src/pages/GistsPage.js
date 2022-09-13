@@ -5,6 +5,10 @@ import {
   fetchAsyncGists,
   fetchSliceGists,
   searchGists,
+  searchLocalGists,
+  searchGistsError,
+  searchGistsSuccess,
+  searchAsyncGists,
 } from "../store/gists/GistsSliceReducer";
 import { gistsAPI } from "../store/gists/GistsQuery";
 
@@ -51,10 +55,18 @@ const buttons = Array.from({ length: 10 }).map((_, index) => index + 1);
 };*/
 
 export const GistsPage = () => {
-  const { gists, pending, error, searchedGists } = useSelector(
-    (state) => state.gists
-  );
+  const {
+    gists,
+    pending,
+    error,
+    searchedLocalGists,
+    searchedGists,
+    searchPending,
+    searchError,
+  } = useSelector((state) => state.gists);
   const dispatch = useDispatch();
+
+  const [name, setName] = useState("");
 
   useEffect(() => {
     if (!gists.length) {
@@ -62,42 +74,80 @@ export const GistsPage = () => {
     }
   }, [dispatch, gists]);
 
+  useEffect(() => {
+    if (!searchedGists.length) {
+      dispatch(searchAsyncGists());
+    }
+  }, [dispatch, searchedGists]);
+
   if (error) {
     return <h1>{error}</h1>;
   }
 
+  const handleChange = (e) => {
+    dispatch(searchAsyncGists(e.target.value));
+    setName(e.target.value);
+  };
+
+  /*const handlePressInput = (name) => {
+    if (name) {
+      dispatch(searchAsyncGists(name));
+    }
+  };*/
+
   return (
-    <div>
-      <h1>Gists page</h1>
-      <input
-        type="text"
-        onChange={(e) => dispatch(searchGists(e.target.value))}
-      />
-      {pending && <h1>pending ...</h1>}
-      {searchedGists.length
-        ? searchedGists.map((gist, index) => {
+    <>
+      <div>
+        <h1>Gists page</h1>
+        <input type="text" onChange={() => dispatch(fetchAsyncGists())} />
+        {pending && <h1>pending ...</h1>}
+        {searchedLocalGists.length
+          ? searchedLocalGists.map((gist, index) => {
+              return (
+                <div key={index}>
+                  <h2>{gist.url}</h2>
+                </div>
+              );
+            })
+          : gists.map((gist, index) => {
+              return (
+                <div key={index}>
+                  <h2>{gist.url}</h2>
+                </div>
+              );
+            })}
+        <hr />
+        {buttons.map((btn, index) => {
+          return (
+            <button key={index} onClick={() => dispatch(fetchAsyncGists(btn))}>
+              {btn}
+            </button>
+          );
+        })}
+      </div>
+      <hr />
+      <div>
+        <h1>Поиск гистов</h1>
+        <input type="text" onBlur={handleChange} />
+        {name ? (
+          <h1>Сейчас выведены гисты пользователя {name}</h1>
+        ) : (
+          <h1>Введите логин пользователя</h1>
+        )}
+        {searchPending && <h1>pending ...</h1>}
+        {searchedGists.length ? (
+          searchedGists.map((gist, index) => {
             return (
               <div key={index}>
                 <h2>{gist.url}</h2>
               </div>
             );
           })
-        : gists.map((gist, index) => {
-            return (
-              <div key={index}>
-                <h2>{gist.url}</h2>
-              </div>
-            );
-          })}
-      <hr />
-      {buttons.map((btn, index) => {
-        return (
-          <button key={index} onClick={() => dispatch(fetchAsyncGists(btn))}>
-            {btn}
-          </button>
-        );
-      })}
-    </div>
+        ) : (
+          <h1>Совпадений не найдено</h1>
+        )}
+      </div>
+    </>
   );
 };
 
