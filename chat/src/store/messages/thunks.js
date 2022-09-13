@@ -1,15 +1,22 @@
 import { sendMessage } from "./actions";
 import { createMessage } from "./messagesSliceReducer";
 
-export const sendMessageWithBot = (chatId, message) => (dispatch) => {
-  // dispatch(createMessage({chatId, message, author}));
-  dispatch(sendMessage(chatId, message));
+export const sendMessageWithBot = (chatId, message, author) => (dispatch) => {
+  dispatch(createMessage({ chatId, message, author }));
+  // dispatch(sendMessage(chatId, message));
 
-  // if (author === "User") {
-  if (message.author === "User") {
+  if (author === "User") {
+    // if (message.author === "User") {
     const timerId = setTimeout(() => {
+      /*  dispatch(
+          sendMessage(chatId, {
+            message: "Hello form thunk!",
+            author: "Bot",
+          })
+        );*/
       dispatch(
-        sendMessage(chatId, {
+        createMessage({
+          chatId,
           message: "Hello form thunk!",
           author: "Bot",
         })

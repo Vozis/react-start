@@ -1,26 +1,33 @@
 import axios from "axios";
-import { userSlice } from "./userSlice";
+import userSlice, {
+  usersFetching,
+  usersFetchingError,
+  usersFetchingSuccess,
+} from "./userSlice";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
 /*export const fetchUsers = () => async (dispatch) => {
   try {
-    dispatch(userSlice.actions.usersFetching());
+    dispatch(usersFetching());
     const response = await axios.get(
       "https://jsonplaceholder.typicode.com/users"
     );
-    console.log(response.data);
-    dispatch(userSlice.actions.usersFetchingSuccess(response.data));
+    dispatch(usersFetchingSuccess(response.data));
   } catch (err) {
-    dispatch(userSlice.actions.usersFetchingError(err.message));
+    dispatch(usersFetchingError(err.message));
   }
 };*/
 
 export const fetchUsers = createAsyncThunk(
   "user/fetchAll",
   async (_, thunkAPI) => {
-    const response = await axios.get(
-      "https://jsonplaceholder.typicode.com/users"
-    );
-    return response.data;
+    try {
+      const { data } = await axios.get(
+        "https://jsonplaceholder.typicode.com/users"
+      );
+      return data;
+    } catch (err) {
+      return thunkAPI.rejectWithValue(err.message);
+    }
   }
 );

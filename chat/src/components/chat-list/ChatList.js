@@ -28,8 +28,8 @@ export const ChatList = () => {
 
   const deleteConversationByName = useCallback(
     (name, event) => {
-      dispatch(deleteConversation(name));
-      // dispatch(removeConversation(name));
+      // dispatch(deleteConversation(name));
+      dispatch(removeConversation(name));
       event.preventDefault();
       // setTimeout(() => navigate("/chats"), 0);
       navigate("/chats");
@@ -42,7 +42,6 @@ export const ChatList = () => {
   };
 
   const createConversationByName = () => {
-    console.log(chatName);
     const isValidName = !conversations.includes(chatName);
 
     // switch (chatName) {
@@ -55,8 +54,8 @@ export const ChatList = () => {
     // }
 
     if (chatName && isValidName) {
-      dispatch(createConversation(chatName));
-      // dispatch(addConversation(chatName));
+      // dispatch(createConversation(chatName));
+      dispatch(addConversation(chatName));
     } else {
       alert("Ошибка в названии");
     }

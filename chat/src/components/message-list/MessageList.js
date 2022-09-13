@@ -36,9 +36,8 @@ export const MessageList = () => {
         //     author,
         //   })
         // );
-        const cancel = dispatch(
-          sendMessageWithBot(chatId, { message, author })
-        );
+        // dispatch(sendMessageWithBot(chatId, { message, author }));
+        dispatch(sendMessageWithBot(chatId, message, author));
         // sendSliceMessage(chatId, message, author);
         inputRef.current.children[0].focus();
         setValue("");

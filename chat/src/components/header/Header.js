@@ -28,6 +28,10 @@ const menu = [
     title: "Profile",
     to: "/profile",
   },
+  {
+    title: "Gists",
+    to: "/gists",
+  },
 ];
 
 export const Header = () => {

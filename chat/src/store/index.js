@@ -14,6 +14,14 @@ import thunk from "redux-thunk";
 import { persistStore, persistReducer, createTransform } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import logger from "redux-logger";
+import { gistsReducer } from "./gists";
+import { getPublicApi, searchGistsByName } from "../api/gists";
+import gistsSliceReducer from "./gists/GistsSliceReducer";
+import { gistsAPI } from "./gists/GistsQuery";
+
+// ========================== API =========================
+
+const api = { getPublicApi, searchGistsByName };
 
 // ========================== Persist reducer=========================
 
@@ -40,6 +48,7 @@ const persistedReducer = persistReducer(
     profile: profileReducer,
     conversations: conversationsReducer,
     messages: messagesReducer,
+    gists: gistsReducer,
   })
 );
 
@@ -48,7 +57,7 @@ const persistedReducer = persistReducer(
 export const store = createStore(
   persistedReducer,
   compose(
-    applyMiddleware(timeScheduler, thunk, logger),
+    applyMiddleware(timeScheduler, thunk.withExtraArgument(api), logger),
     window.__REDUX_DEVTOOLS_EXTENSION__
       ? window.__REDUX_DEVTOOLS_EXTENSION__()
       : (args) => args
@@ -65,25 +74,19 @@ const rootReducer = combineReducers({
   profileStudy: profileStudyReducer,
   conversations: conversationsSliceReducer,
   messages: messagesSliceReducer,
+  gists: gistsSliceReducer,
+  // [gistsAPI.reducerPath]: gistsAPI.reducer,
 });
 
-const middlewares = [timeScheduler, botMessage, logger];
+const middlewares = [gistsAPI.middleware, timeScheduler, botMessage, logger];
 
 export const store2 = configureStore({
   reducer: rootReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
+      thunk: {
+        extraArgument: api,
+      },
       serializableCheck: false,
     }).concat(middlewares),
 });
-
-// ========================== Configure Store 2 =========================
-
-// const studyReducer = combineReducers({
-//   profile: profileStudyReducer,
-//   counter: counterReducer,
-// });
-//
-// export const store = configureStore({
-//   reducer: studyReducer,
-// });

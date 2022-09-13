@@ -8,14 +8,11 @@ const initialState = {
   count: 0,
 };
 
-export const userSlice = createSlice({
+const userSliceReducer = createSlice({
   name: "user",
   initialState,
   reducers: {
-    incrementCount(state, action) {
-      state.count += action.payload;
-    },
-    usersFetching(state) {
+    /*usersFetching(state, action) {
       state.isLoading = true;
     },
     usersFetchingSuccess(state, action) {
@@ -26,16 +23,16 @@ export const userSlice = createSlice({
     usersFetchingError(state, action) {
       state.isLoading = false;
       state.error = action.payload;
-    },
+    },*/
   },
   extraReducers: {
-    [fetchUsers.fulfilled.type]: (state, action) => {
-      state.isLoading = false;
-      state.error = "";
-      state.users = action.payload;
-    },
     [fetchUsers.pending.type]: (state, action) => {
       state.isLoading = true;
+    },
+    [fetchUsers.fulfilled.type]: (state, action) => {
+      state.isLoading = false;
+      state.users = action.payload;
+      state.error = "";
     },
     [fetchUsers.rejected.type]: (state, action) => {
       state.isLoading = false;
@@ -44,5 +41,6 @@ export const userSlice = createSlice({
   },
 });
 
-export default userSlice.reducer;
-// export const { incrementCount } = userSlice.actions;
+export default userSliceReducer.reducer;
+export const { usersFetching, usersFetchingSuccess, usersFetchingError } =
+  userSliceReducer.actions;

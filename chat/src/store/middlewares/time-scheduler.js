@@ -1,6 +1,4 @@
 export const timeScheduler = (store) => (next) => (action) => {
-  console.log(action.meta);
-
   if (!action.meta || !action.meta.delay) {
     return next(action);
   }
