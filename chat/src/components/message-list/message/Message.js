@@ -3,7 +3,10 @@ import classNames from "classnames";
 import PropTypes from "prop-types";
 import { useDispatch } from "react-redux";
 import { deleteMessage } from "../../../store/messages";
-import { removeMessage } from "../../../store/messages/messagesSliceReducer";
+import {
+  removeAsyncMessage,
+  removeMessage,
+} from "../../../store/messages/messagesSliceReducer";
 import { format } from "date-fns";
 
 export function Message({ message, chatId }) {
@@ -21,17 +24,10 @@ export function Message({ message, chatId }) {
         {message.date.toDateString()}, {message.date.getHours()}:
         {message.date.getMinutes()}
       </p>*/}
-      <p>{format(new Date(message?.date), "yyyy-MM-dd HH:MM:SS")}</p>
-      <button onClick={() => dispatch(deleteMessage(chatId, message.id))}>
+      {/*<p>{format(new Date(message?.date), "yyyy-MM-dd HH:MM:SS")}</p>*/}
+      <button onClick={() => dispatch(removeAsyncMessage({ message, chatId }))}>
         X
       </button>
-      {/*<button
-        onClick={() =>
-          dispatch(removeMessage({ chatId, messageId: message.id }))
-        }
-      >
-        X
-      </button>*/}
     </div>
   );
 }

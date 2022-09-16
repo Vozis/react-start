@@ -10,21 +10,19 @@ import {
   deleteConversation,
 } from "../../store/conversations";
 import {
-  removeConversation,
-  addConversation,
+  removeAsyncConversation as removeConversation,
+  createAsyncConversation as addConversation,
 } from "../../store/conversations/conversationsSliceReducer";
 import { Button, Input, TextField } from "@mui/material";
 import { ThemeContext } from "../../theme-context";
 
 export const ChatList = () => {
-  const { conversations } = useSelector(conversationsSelector);
+  const { conversations, pending } = useSelector(conversationsSelector);
   const { chatId } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [chatName, setChatName] = useState("");
   const { theme, themeMui } = useContext(ThemeContext);
-
-  // console.log("conversations: ", conversations);
 
   const deleteConversationByName = useCallback(
     (name, event) => {
@@ -44,17 +42,7 @@ export const ChatList = () => {
   const createConversationByName = () => {
     const isValidName = !conversations.includes(chatName);
 
-    // switch (chatName) {
-    //   case chatName === "":
-    //     alert("Напишите название");
-    //   case isValidName:
-    //     alert("Ошибка в названии");
-    //   case chatName !== "" && !isValidName:
-    //     dispatch(createConversation(chatName));
-    // }
-
     if (chatName && isValidName) {
-      // dispatch(createConversation(chatName));
       dispatch(addConversation(chatName));
     } else {
       alert("Ошибка в названии");
@@ -84,6 +72,7 @@ export const ChatList = () => {
         </Button>
       </div>
       <hr />
+      {pending && <h1>Chat loading...</h1>}
       <List components={"nav"}>
         {conversations.map((chat) => (
           <Chat

@@ -1,31 +1,21 @@
 import React from "react";
 import * as Yup from "yup";
-import { Formik, Form, Field } from "formik";
-import FormikControl from "../formik-form/FormikControl";
-import { useDispatch, useSelector } from "react-redux";
-import { updateVal } from "../../store/profile/profileSliceReducer";
+import { Formik, Form } from "formik";
+import FormikControl from "./FormikControl";
+import { Button } from "@mui/material";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../../api/firebase";
 
-function NewProfileForm(props) {
-  const data = useSelector((state) => state.profile);
-  const dispatch = useDispatch();
-
-  const updateFirstName = (value) => {
-    dispatch(updateVal(value));
-  };
-
-  console.log("data", data);
-
+function RegistrationForm(props) {
   const initialValues = {
-    firstName: "",
-    lastName: "",
+    name: "",
     email: "",
     password: "",
     confirmPassword: "",
   };
 
   const validationSchema = Yup.object({
-    firstName: Yup.string().required(),
-    lastName: Yup.string().required(),
+    name: Yup.string().required("Required"),
     email: Yup.string().email("Invalid email").required("Required"),
     password: Yup.string().required("Required"),
     confirmPassword: Yup.string()
@@ -33,14 +23,18 @@ function NewProfileForm(props) {
       .required("Required"),
   });
 
-  const onSubmit = (values, onSubmitProps) => {
-    console.log("Form data", values);
-
-    updateFirstName(values);
-    //onSubmitProps.setSubmitting(false);
+  const onSubmit = async (values, onSubmitProps) => {
+    onSubmitProps.setSubmitting(false);
     onSubmitProps.resetForm();
-  };
+    // props.updateDate("");
 
+    try {
+      await createUserWithEmailAndPassword(auth, values.email, values.password);
+      // props.updateDate("");
+    } catch (e) {
+      // props.updateDate(e.message);
+    }
+  };
   return (
     <Formik
       initialValues={initialValues}
@@ -49,18 +43,17 @@ function NewProfileForm(props) {
     >
       {(formik) => {
         return (
-          <Form>
+          <Form
+            style={{
+              display: "flex",
+              flexDirection: "column",
+            }}
+          >
             <FormikControl
               control={"muiInput"}
-              type={"text"}
-              label={"First Name"}
-              name={"firstName"}
-            />
-            <FormikControl
-              control={"muiInput"}
-              type={"text"}
-              label={"Last Name"}
-              name={"lastName"}
+              type={"name"}
+              label={"Name"}
+              name={"name"}
             />
             <FormikControl
               control={"muiInput"}
@@ -80,12 +73,13 @@ function NewProfileForm(props) {
               label={"Confirm Password"}
               name={"confirmPassword"}
             />
-            <button
+            <Button
+              variant={"contained"}
               type="submit"
               disabled={!formik.isValid || formik.isSubmitting}
             >
               Submit
-            </button>
+            </Button>
           </Form>
         );
       }}
@@ -93,4 +87,4 @@ function NewProfileForm(props) {
   );
 }
 
-export default NewProfileForm;
+export default RegistrationForm;

@@ -15,6 +15,7 @@ import {
   createMessage,
   sendSliceMessage,
 } from "../../store/messages/messagesSliceReducer";
+import { nanoid } from "nanoid";
 
 export const MessageList = () => {
   const { chatId } = useParams();
@@ -29,16 +30,7 @@ export const MessageList = () => {
   const send = useCallback(
     (message, author = "User") => {
       if (message) {
-        // dispatch(
-        //   createMessage({
-        //     chatId,
-        //     message,
-        //     author,
-        //   })
-        // );
-        // dispatch(sendMessageWithBot(chatId, { message, author }));
-        dispatch(sendMessageWithBot(chatId, message, author));
-        // sendSliceMessage(chatId, message, author);
+        dispatch(sendMessageWithBot({ message, author }, chatId));
         inputRef.current.children[0].focus();
         setValue("");
       }
@@ -70,21 +62,6 @@ export const MessageList = () => {
       });
     }
   }, [messages]);
-
-  /*useEffect(() => {
-    const lastMessage = messages[messages.length - 1];
-    let timerId = null;
-
-    if (messages.length && lastMessage.author === "User") {
-      timerId = setTimeout(() => {
-        send("Hello from Bot", "Bot");
-      }, 500);
-
-      return () => {
-        clearInterval(timerId);
-      };
-    }
-  }, [messages, send]);*/
 
   return (
     <>

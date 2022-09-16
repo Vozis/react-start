@@ -7,7 +7,9 @@ import { counterReducer } from "./counter";
 import { conversationsReducer } from "./conversations";
 import conversationsSliceReducer from "./conversations/conversationsSliceReducer";
 import { messagesReducer } from "./messages";
-import messagesSliceReducer from "./messages/messagesSliceReducer";
+import messagesSliceReducer, {
+  createAsyncMessage,
+} from "./messages/messagesSliceReducer";
 import { botMessage, timeScheduler } from "./middlewares";
 import thunk from "redux-thunk";
 
@@ -19,9 +21,41 @@ import { getPublicApi, searchGistsByName } from "../api/gists";
 import gistsSliceReducer from "./gists/GistsSliceReducer";
 import { gistsAPI } from "./gists/GistsQuery";
 
+import {
+  createConversationApi,
+  getConversationApi,
+  removeConversationApi,
+} from "../api/conversations";
+import {
+  createMessagesApi,
+  getMessagesApi,
+  removeMessagesApi,
+} from "../api/messages";
+
 // ========================== API =========================
 
-const api = { getPublicApi, searchGistsByName };
+const api = {
+  getPublicApi,
+  searchGistsByName,
+  getConversationApi,
+  createConversationApi,
+  removeConversationApi,
+  getMessagesApi,
+  createMessagesApi,
+  removeMessagesApi,
+};
+
+/*setTimeout(() => {
+  createMessagesApi(
+    {
+      author: "User",
+      message: "Первое сообщение в первом чате",
+      date: new Date(),
+      id: nanoid(),
+    },
+    "chat1"
+  );
+}, 5000);*/
 
 // ========================== Persist reducer=========================
 

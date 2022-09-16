@@ -1,29 +1,23 @@
 import { sendMessage } from "./actions";
-import { createMessage } from "./messagesSliceReducer";
+import { createAsyncMessage, createMessage } from "./messagesSliceReducer";
+import { nanoid } from "nanoid";
 
-export const sendMessageWithBot = (chatId, message, author) => (dispatch) => {
-  dispatch(createMessage({ chatId, message, author }));
-  // dispatch(sendMessage(chatId, message));
+export const sendMessageWithBot = (messageObj, chatId) => (dispatch) => {
+  dispatch(createAsyncMessage({ messageObj, chatId }));
 
-  if (author === "User") {
-    // if (message.author === "User") {
-    const timerId = setTimeout(() => {
-      /*  dispatch(
-          sendMessage(chatId, {
+  const { message, author } = messageObj;
+
+  setTimeout(() => {
+    if (author === "User") {
+      dispatch(
+        createAsyncMessage({
+          messageObj: {
             message: "Hello form thunk!",
             author: "Bot",
-          })
-        );*/
-      dispatch(
-        createMessage({
+          },
           chatId,
-          message: "Hello form thunk!",
-          author: "Bot",
         })
       );
-    }, 1000);
-    return function cancel() {
-      clearInterval(timerId);
-    };
-  }
+    }
+  }, 500);
 };

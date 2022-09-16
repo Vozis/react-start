@@ -2,8 +2,10 @@ import styled from "@emotion/styled";
 import { NavLink } from "react-router-dom";
 import { useContext, useState } from "react";
 import { ThemeContext } from "../../theme-context";
-import { FormControlLabel, Switch } from "@mui/material";
+import { Button, FormControlLabel, Switch } from "@mui/material";
 import { CustomNavLink } from "../styles";
+import { signOut } from "firebase/auth";
+import { auth } from "../../api/firebase";
 
 const HeaderClass = styled.div`
   display: flex;
@@ -15,7 +17,18 @@ const HeaderClass = styled.div`
   background-color: ${({ theme }) => theme.palette.primary.light};
 `;
 
-const menu = [
+const menuWithoutSession = [
+  {
+    title: "Login",
+    to: "/login",
+  },
+  {
+    title: "Registration",
+    to: "/registration",
+  },
+];
+
+const menuWithSession = [
   {
     title: "Home",
     to: "/",
@@ -34,7 +47,7 @@ const menu = [
   },
 ];
 
-export const Header = () => {
+export const Header = ({ email }) => {
   const { theme, themeSetter, themeMui } = useContext(ThemeContext);
   const [checked, setChecked] = useState(theme.name === "light" ? true : false);
 
@@ -47,6 +60,12 @@ export const Header = () => {
 
   return (
     <HeaderClass>
+      {!!email && (
+        <div>
+          <h1>USER: {email}</h1>
+          <Button onClick={() => signOut(auth)}>Выйти</Button>
+        </div>
+      )}
       <FormControlLabel
         sx={{
           color: theme.theme.color,
@@ -56,19 +75,35 @@ export const Header = () => {
         }
         label={theme.name}
       />
-      {menu.map((item) => (
-        <CustomNavLink
-          key={item.to}
-          to={item.to}
-          style={({ isActive }) => {
-            return {
-              color: isActive ? "red" : " ",
-            };
-          }}
-        >
-          {item.title}
-        </CustomNavLink>
-      ))}
+      {!!email &&
+        menuWithSession.map((item) => (
+          <CustomNavLink
+            key={item.to}
+            to={item.to}
+            style={({ isActive }) => {
+              return {
+                color: isActive ? "red" : " ",
+              };
+            }}
+          >
+            {item.title}
+          </CustomNavLink>
+        ))}
+
+      {!email &&
+        menuWithoutSession.map((item) => (
+          <CustomNavLink
+            key={item.to}
+            to={item.to}
+            style={({ isActive }) => {
+              return {
+                color: isActive ? "red" : " ",
+              };
+            }}
+          >
+            {item.title}
+          </CustomNavLink>
+        ))}
     </HeaderClass>
   );
 };

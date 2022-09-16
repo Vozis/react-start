@@ -27,6 +27,7 @@ export const searchAsyncGists = createAsyncThunk(
   async (name = "bogdanq", thunkAPI) => {
     try {
       const { data } = await thunkAPI.extra.searchGistsByName(name);
+      console.log(data);
       return data;
     } catch (err) {
       return thunkAPI.rejectWithValue(err.message);
@@ -108,12 +109,12 @@ export const {
   searchGistsSuccess,
 } = gistsSliceReducer.actions;
 
-export const fetchSliceGists = (page) => async (dispatch, _, api) => {
-  try {
-    dispatch(fetchGists());
-    const { data } = await api.getPublicApi(page);
-    dispatch(fetchGistsSuccess(data));
-  } catch (err) {
-    dispatch(fetchGistsError(err.message));
-  }
-};
+// export const fetchSliceGists = (page) => async (dispatch, _, api) => {
+//   try {
+//     dispatch(fetchGists());
+//     const { data } = await api.getPublicApi(page);
+//     dispatch(fetchGistsSuccess(data));
+//   } catch (err) {
+//     dispatch(fetchGistsError(err.message));
+//   }
+// };
